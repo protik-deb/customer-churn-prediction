@@ -1,7 +1,8 @@
 """Train baseline customer churn classifiers.
 
 Example:
-    python src/train.py --data data/WA_Fn-UseC_-Telco-Customer-Churn.csv
+    python src/train.py
+    python src/train.py --data path/to/Telco-Customer-Churn.csv
 """
 
 from __future__ import annotations
@@ -33,6 +34,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 TARGET = "Churn"
 DROP_COLUMNS = ["customerID"]
+DEFAULT_DATA_PATH = Path("data/Telco-Customer-Churn.csv")
 
 
 def load_data(path: Path) -> pd.DataFrame:
@@ -48,7 +50,7 @@ def load_data(path: Path) -> pd.DataFrame:
 
 
 def build_preprocessor(X: pd.DataFrame) -> ColumnTransformer:
-    """Build preprocessing that is fitted only on each training fold."""
+    """Build preprocessing that is fitted only on training data."""
     numeric_features = X.select_dtypes(include=np.number).columns.tolist()
     categorical_features = X.select_dtypes(exclude=np.number).columns.tolist()
 
@@ -74,7 +76,9 @@ def build_preprocessor(X: pd.DataFrame) -> ColumnTransformer:
     )
 
 
-def evaluate(name: str, model: Pipeline, X_test: pd.DataFrame, y_test: pd.Series) -> dict[str, Any]:
+def evaluate(
+    name: str, model: Pipeline, X_test: pd.DataFrame, y_test: pd.Series
+) -> dict[str, Any]:
     """Print and return a concise set of test metrics."""
     predictions = model.predict(X_test)
     probabilities = model.predict_proba(X_test)[:, 1]
@@ -104,14 +108,13 @@ def main() -> None:
     parser.add_argument(
         "--data",
         type=Path,
-        default=Path("data/WA_Fn-UseC_-Telco-Customer-Churn.csv"),
+        default=DEFAULT_DATA_PATH,
         help="Path to the Telco Customer Churn CSV.",
     )
     parser.add_argument("--random-state", type=int, default=42)
     args = parser.parse_args()
 
-    df = load_data(args.data).copy()
-    df = df.drop_duplicates()
+    df = load_data(args.data).copy().drop_duplicates()
 
     # TotalCharges is numeric in meaning but may contain blank strings.
     if "TotalCharges" in df.columns:
