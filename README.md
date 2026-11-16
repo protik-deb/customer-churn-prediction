@@ -15,13 +15,13 @@ An end-to-end machine learning project to explore customer churn patterns and pr
 
 ## Dataset
 
-This project uses the **IBM Telco Customer Churn** sample dataset.
+This project uses the **IBM Telco Customer Churn** sample dataset. IBM describes the data as sample data for a fictional telecommunications company.
 
-- Dataset source: [IBM Sample Data Sets — Telco Customer Churn](https://www.ibm.com/docs/en/cognos-analytics/11.1.0?topic=samples-telco-customer-churn)
-- A commonly used public CSV mirror is referenced in the notebook. Dataset provenance and license/terms should be checked against the source before redistribution.
-- The dataset describes a fictional telecom customer base. It is suitable for learning and demonstration, not for making claims about a real company's customers.
+- Source repository: [IBM/telco-customer-churn-on-icp4d](https://github.com/IBM/telco-customer-churn-on-icp4d) (archived by IBM in July 2024).
+- Direct CSV: [Telco-Customer-Churn.csv](https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv).
+- Dataset documentation: [IBM Cognos Analytics sample data](https://www.ibm.com/docs/en/cognos-analytics/11.1.0?topic=samples-telco-customer-churn).
 
-The notebook attempts to download the CSV from a public mirror. You can also download a copy and place it at `data/WA_Fn-UseC_-Telco-Customer-Churn.csv`.
+The notebook downloads the CSV into `data/Telco-Customer-Churn.csv` if it is not already present. The CSV is not committed to this repository. Review the source repository's terms and attribution requirements before redistribution.
 
 ## Repository structure
 
@@ -71,14 +71,20 @@ python -m pip install -r requirements.txt
 jupyter lab
 ```
 
-Open `notebooks/customer_churn_analysis.ipynb` and run all cells.
+Open `notebooks/customer_churn_analysis.ipynb` and run all cells. The notebook downloads the dataset on first use, so an internet connection is needed unless the CSV is already present locally.
 
 ### 5. Run the training script
 
-When the dataset CSV is saved under `data/`:
+The script expects the CSV at `data/Telco-Customer-Churn.csv` by default:
 
 ```bash
-python src/train.py --data data/WA_Fn-UseC_-Telco-Customer-Churn.csv
+python src/train.py
+```
+
+Or provide a custom path:
+
+```bash
+python src/train.py --data path/to/Telco-Customer-Churn.csv
 ```
 
 The script prints evaluation metrics and saves the fitted model pipeline to `models/best_model.joblib`.
@@ -102,7 +108,7 @@ For a more robust assessment, consider repeated stratified cross-validation, thr
 
 ## Important limitations
 
-- The IBM sample dataset is synthetic/sample data and may not represent real customer behavior.
+- The dataset represents a fictional telecom provider and may not represent real customer behavior.
 - Churn prediction identifies statistical associations, not causes of churn.
 - Class imbalance means accuracy alone is not sufficient.
 - Feature importance is model-dependent and should not be interpreted as causal evidence.
