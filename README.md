@@ -75,7 +75,21 @@ Open `notebooks/customer_churn_analysis.ipynb` and run all cells. The notebook d
 
 ### 5. Run the training script
 
-The script expects the CSV at `data/Telco-Customer-Churn.csv` by default:
+The script expects the CSV at `data/Telco-Customer-Churn.csv` by default. Download it manually first when running the script without running the notebook:
+
+**Windows PowerShell**
+```powershell
+New-Item -ItemType Directory -Force data
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv" -OutFile "data/Telco-Customer-Churn.csv"
+```
+
+**macOS/Linux**
+```bash
+mkdir -p data
+curl -L "https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv" -o data/Telco-Customer-Churn.csv
+```
+
+Then run:
 
 ```bash
 python src/train.py
